@@ -1,40 +1,60 @@
+using System;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
-public class GridSystem<GridObject>
+public class GridSystem
 {
     private int width;
     private int height;
     private float cellSize;
     private Vector3 originPosition;
-    private GridObject[,] worldGrid;
-    private GridObject[,] structureGrid;
-    private TextMeshPro[,] debugTextArray;
+    private GridCell[,] gridCells;
+    private Dictionary<ResourceType, GameObject> resourcePrefabs;
+    private Dictionary<BuildingType, GameObject> buildingPrefabs;
+    private Dictionary<ObstacleType, GameObject> obstaclePrefabs;
 
-    public GridSystem(int width, int height, float cellSize, Vector3 originPosition)
+    public GridSystem(
+        int width,
+        int height,
+        float cellSize,
+        Vector3 originPosition,
+        Dictionary<ResourceType, GameObject> resourcePrefabs,
+        Dictionary<BuildingType, GameObject> buildingPrefabs,
+        Dictionary<ObstacleType, GameObject> obstaclePrefabs
+    )
     {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
         this.originPosition = originPosition;
+        this.resourcePrefabs = resourcePrefabs;
+        this.buildingPrefabs = buildingPrefabs;
+        this.obstaclePrefabs = obstaclePrefabs;
+        gridCells = new GridCell[width, height];
 
-        worldGrid = new GridObject[width, height];
-        structureGrid = new GridObject[width, height];
-        debugTextArray = new TextMeshPro[width, height];
-
-        for (int x = 0; x < worldGrid.GetLength(0); x++)
+        // Initialize grid cells
+        for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < worldGrid.GetLength(1); y++)
+            for (int y = 0; y < height; y++)
             {
-                // debugTextArray[x, y] = Utils.CreateWorldText(worldGrid[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 10);
-                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
-                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
+                gridCells[x, y] = new GridCell(x, y);
+                Debug.DrawLine(
+                    GetWorldPosition(x, y),
+                    GetWorldPosition(x, y + 1),
+                    Color.white,
+                    999f
+                );
+                Debug.DrawLine(
+                    GetWorldPosition(x, y),
+                    GetWorldPosition(x + 1, y),
+                    Color.white,
+                    999f
+                );
             }
         }
-        Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
-        Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
     }
 
     public Vector3 GetWorldPosition(int x, int y)
@@ -48,61 +68,100 @@ public class GridSystem<GridObject>
         y = Mathf.FloorToInt((worldPosition - originPosition).y / cellSize);
     }
 
-    public void SetObject(int x, int y, GridObject value)
+    public bool PlaceEntity(int x, int y, GridEntity entity)
     {
-        if (x >= 0 && y >= 0 && x < width && y < height)
+        if (IsValidGridPosition(x, y) && !gridCells[x, y].IsOccupied)
         {
-            worldGrid[x, y] = value;
-            debugTextArray[x, y].text = worldGrid[x, y].ToString();
+            gridCells[x, y].SetEntity(entity);
+            CreateVisualRepresentation(x, y, entity);
+            return true;
         }
+        return false;
     }
 
-    public void SetObject(Vector3 worldPosition, GridObject value)
+    public bool PlaceEntity(Vector3 worldPosition, GridEntity entity)
     {
-        int x, y;
+        int x,
+            y;
         GetXY(worldPosition, out x, out y);
-        SetObject(x, y, value);
+        return PlaceEntity(x, y, entity);
     }
 
-    public GridObject GetObject(int x, int y)
+    public void RemoveEntity(int x, int y)
     {
-        if (x >= 0 && y >= 0 && x < width && y < height)
+        if (IsValidGridPosition(x, y))
         {
-            return worldGrid[x, y];
-        }
-        else
-        {
-            Debug.LogWarning("Grid: " + x + ", " + y + " is out of bounds.");
-
-            return default;
+            if (gridCells[x, y].VisualRepresentation != null)
+            {
+                GameObject.Destroy(gridCells[x, y].VisualRepresentation);
+            }
+            gridCells[x, y].RemoveEntity();
         }
     }
 
-    public GridObject GetObjectWithWorldPosition(Vector3 worldPosition)
+    public GridCell GetCell(int x, int y)
     {
-        int x, y;
-        GetXY(worldPosition, out x, out y);
-
-        return GetObject(x, y);
+        return IsValidGridPosition(x, y) ? gridCells[x, y] : null;
     }
 
-    public int GetWidth()
+    private bool IsValidGridPosition(int x, int y)
     {
-        return width;
+        return x >= 0 && y >= 0 && x < width && y < height;
     }
 
-    public int GetHeight()
+    private void CreateVisualRepresentation(int x, int y, GridEntity entity)
     {
-        return height;
+        GameObject prefab = null;
+
+        if (entity.EntityType == EntityType.Resource && entity is ResourceEntity resourceEntity)
+        {
+            resourcePrefabs.TryGetValue(resourceEntity.ResourceType, out prefab);
+        }
+        if (entity.EntityType == EntityType.Building && entity is BuildingEntity buildingEntity)
+        {
+            buildingPrefabs.TryGetValue(buildingEntity.BuildingType, out prefab);
+        }
+        if (entity.EntityType == EntityType.Obstacle && entity is ObstacleEntity obstacleEntity)
+        {
+            obstaclePrefabs.TryGetValue(obstacleEntity.ObstacleType, out prefab);
+        }
+
+        if (prefab != null)
+        {
+            Vector3 position = GetWorldPosition(x, y) + new Vector3(cellSize, 0) * 0.5f;
+            GameObject visual = GameObject.Instantiate(prefab, position, Quaternion.identity);
+            gridCells[x, y].VisualRepresentation = visual;
+        }
     }
 
-    public float GetCellSize()
+    /// <summary>
+    /// Example Method.
+    /// <br />
+    /// Generates a patch of resources on the grid.
+    /// </summary>
+    /// <param name="resourceType"></param>
+    /// <param name="startX"></param>
+    /// <param name="startY"></param>
+    /// <param name="patchWidth"></param>
+    /// <param name="patchHeight"></param>
+    public void GenerateResourcePatch(
+        ResourceType resourceType,
+        int startX,
+        int startY,
+        int patchWidth,
+        int patchHeight,
+        float richness
+    )
     {
-        return cellSize;
-    }
-
-    public Vector3 GetOriginPosition()
-    {
-        return originPosition;
+        for (int x = startX; x < startX + patchWidth && x < width; x++)
+        {
+            for (int y = startY; y < startY + patchHeight && y < height; y++)
+            {
+                if (!gridCells[x, y].IsOccupied)
+                {
+                    PlaceEntity(x, y, new ResourceEntity(resourceType, Mathf.FloorToInt(richness * 100)));
+                }
+            }
+        }
     }
 }
