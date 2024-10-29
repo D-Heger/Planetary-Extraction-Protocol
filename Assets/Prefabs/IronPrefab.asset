@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: IronPrefab
   m_EditorClassIdentifier: 
   resourceType: 1
-  buildingType: 0
-  obstacleType: 0
-  prefab: {fileID: 0}
+  prefab: {fileID: 7427481571357534658, guid: d2db14911496bc44799a17c8233bd58c, type: 3}

@@ -113,15 +113,15 @@ public class GridSystem
     {
         GameObject prefab = null;
 
-        if (entity.EntityType == EntityType.Resource && entity is ResourceEntity resourceEntity)
+        if (entity.EntityType == EntityType.Resource && entity is ResourceEntity resourceEntity && resourceEntity.ResourceType != ResourceType.None)
         {
             resourcePrefabs.TryGetValue(resourceEntity.ResourceType, out prefab);
         }
-        if (entity.EntityType == EntityType.Building && entity is BuildingEntity buildingEntity)
+        if (entity.EntityType == EntityType.Building && entity is BuildingEntity buildingEntity && buildingEntity.BuildingType != BuildingType.None)
         {
             buildingPrefabs.TryGetValue(buildingEntity.BuildingType, out prefab);
         }
-        if (entity.EntityType == EntityType.Obstacle && entity is ObstacleEntity obstacleEntity)
+        if (entity.EntityType == EntityType.Obstacle && entity is ObstacleEntity obstacleEntity && obstacleEntity.ObstacleType != ObstacleType.None)
         {
             obstaclePrefabs.TryGetValue(obstacleEntity.ObstacleType, out prefab);
         }
@@ -159,7 +159,11 @@ public class GridSystem
             {
                 if (!gridCells[x, y].IsOccupied)
                 {
-                    PlaceEntity(x, y, new ResourceEntity(resourceType, Mathf.FloorToInt(richness * 100)));
+                    PlaceEntity(
+                        x,
+                        y,
+                        new ResourceEntity(resourceType, Mathf.FloorToInt(richness * 100))
+                    );
                 }
             }
         }

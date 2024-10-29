@@ -5,6 +5,11 @@ public class test : MonoBehaviour
 {
     private GridSystem gridSystem;
 
+    public ResourcePrefab ironPrefab;
+    public ResourcePrefab copperPrefab;
+    public BuildingPrefab minePrefab;
+    public ObstaclePrefab wreckagePrefab;
+
     void Start()
     {
         gridSystem = new GridSystem(
@@ -14,16 +19,16 @@ public class test : MonoBehaviour
             new Vector3(0, 0),
             new Dictionary<ResourceType, GameObject>
             {
-                { ResourceType.Iron, GetPrefab("IronPrefab") },
-                { ResourceType.Copper, GetPrefab("CopperPrefab") },
+                { ResourceType.Iron, ironPrefab.prefab },
+                { ResourceType.Copper, copperPrefab.prefab },
             },
             new Dictionary<BuildingType, GameObject>
             {
-                { BuildingType.Mine, GetPrefab("MinePrefab") },
+                { BuildingType.Mine, minePrefab.prefab },
             },
             new Dictionary<ObstacleType, GameObject>
             {
-                { ObstacleType.Wreckage, GetPrefab("WreckagePrefab") },
+                { ObstacleType.Wreckage, wreckagePrefab.prefab },
             }
         );
 
@@ -35,8 +40,8 @@ public class test : MonoBehaviour
         gridSystem.PlaceEntity(10, 10, new ObstacleEntity(ObstacleType.Wreckage));
     }
 
-    private GameObject GetPrefab(string name)
+    void Update()
     {
-        return Resources.Load<GameObject>($"Prefabs/{name}");
+        if (Input.GetMouseButtonDown(0)) { }
     }
 }

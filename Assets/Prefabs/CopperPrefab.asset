@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: CopperPrefab
   m_EditorClassIdentifier: 
   resourceType: 2
-  buildingType: 0
-  obstacleType: 0
-  prefab: {fileID: 0}
+  prefab: {fileID: 5861785640887190559, guid: dea3ddf1a4f70f74a8d880fb9fc7c511, type: 3}

@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 822decaeed68ca44ea79910cb64bad76, type: 3}
-  m_Name: WreckagePrefab
-  m_EditorClassIdentifier: 
-  resourceType: 0
-  buildingType: 0
+  m_Script: {fileID: 0}
+  m_Name: ObstaclePrefab
+  m_EditorClassIdentifier: Assembly-CSharp::ObstaclePrefab
   obstacleType: 2
-  prefab: {fileID: 0}
+  prefab: {fileID: 8875142271302810141, guid: 314e106ebfea6b24d83616e47bd02756, type: 3}
