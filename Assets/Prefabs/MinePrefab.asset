@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: d15d7e7d6d6346e4c821f83833a3f9e4, type: 3}
   m_Name: MinePrefab
-  m_EditorClassIdentifier: Assembly-CSharp::BuildingPrefab
-  buildingType: 1
-  prefab: {fileID: 9132501704875033290, guid: 07a71ed1b28f6e242a610479ed5bf38f, type: 3}
+  m_EditorClassIdentifier: 
+  BuildingType: 1
+  Prefab: {fileID: 9132501704875033290, guid: 07a71ed1b28f6e242a610479ed5bf38f, type: 3}
+  CraftingSpeed: 1

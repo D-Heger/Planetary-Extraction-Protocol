@@ -70,9 +70,10 @@ public class GridSystem
 
     public bool PlaceEntity(int x, int y, GridEntity entity)
     {
+        Debug.Log(IsValidGridPosition(x, y));
         if (IsValidGridPosition(x, y) && !gridCells[x, y].IsOccupied)
         {
-            gridCells[x, y].SetEntity(entity);
+            gridCells[x, y].AddEntity(entity);
             CreateVisualRepresentation(x, y, entity);
             return true;
         }
@@ -87,7 +88,7 @@ public class GridSystem
         return PlaceEntity(x, y, entity);
     }
 
-    public void RemoveEntity(int x, int y)
+    public void RemoveEntity(int x, int y, GridEntity entity)
     {
         if (IsValidGridPosition(x, y))
         {
@@ -95,7 +96,19 @@ public class GridSystem
             {
                 GameObject.Destroy(gridCells[x, y].VisualRepresentation);
             }
-            gridCells[x, y].RemoveEntity();
+            gridCells[x, y].RemoveEntity(entity);
+        }
+    }
+
+    public void ClearEntities(int x, int y)
+    {
+        if (IsValidGridPosition(x, y))
+        {
+            if (gridCells[x, y].VisualRepresentation != null)
+            {
+                GameObject.Destroy(gridCells[x, y].VisualRepresentation);
+            }
+            gridCells[x, y].ClearEntities();
         }
     }
 
@@ -111,27 +124,52 @@ public class GridSystem
 
     private void CreateVisualRepresentation(int x, int y, GridEntity entity)
     {
-        GameObject prefab = null;
-
-        if (entity.EntityType == EntityType.Resource && entity is ResourceEntity resourceEntity && resourceEntity.ResourceType != ResourceType.None)
-        {
-            resourcePrefabs.TryGetValue(resourceEntity.ResourceType, out prefab);
-        }
-        if (entity.EntityType == EntityType.Building && entity is BuildingEntity buildingEntity && buildingEntity.BuildingType != BuildingType.None)
-        {
-            buildingPrefabs.TryGetValue(buildingEntity.BuildingType, out prefab);
-        }
-        if (entity.EntityType == EntityType.Obstacle && entity is ObstacleEntity obstacleEntity && obstacleEntity.ObstacleType != ObstacleType.None)
-        {
-            obstaclePrefabs.TryGetValue(obstacleEntity.ObstacleType, out prefab);
-        }
+        GridEntity topEntity = gridCells[x, y].GetTopEntity();
+        GameObject prefab = GetPrefabForEntity(topEntity);
 
         if (prefab != null)
         {
-            Vector3 position = GetWorldPosition(x, y) + new Vector3(cellSize, 0) * 0.5f;
+            Vector3 position = GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f;
             GameObject visual = GameObject.Instantiate(prefab, position, Quaternion.identity);
+
+            // Set the visual to be the correct size
+            visual.transform.localScale = new Vector3(cellSize, cellSize, 1f);
+
+            // Adjust the pivot point for better alignment (assuming the pivot is centered)
+            visual.transform.position = position;
+
             gridCells[x, y].VisualRepresentation = visual;
         }
+    }
+
+    private GameObject GetPrefabForEntity(GridEntity entity)
+    {
+        switch (entity.EntityType)
+        {
+            case EntityType.Resource
+                when entity is ResourceEntity resourceEntity
+                    && resourceEntity.ResourceType != ResourceType.None:
+                resourcePrefabs.TryGetValue(resourceEntity.ResourceType, out var resourcePrefab);
+                return resourcePrefab;
+            case EntityType.Building
+                when entity is BuildingEntity buildingEntity
+                    && buildingEntity.BuildingType != BuildingType.None:
+                buildingPrefabs.TryGetValue(buildingEntity.BuildingType, out var buildingPrefab);
+                return buildingPrefab;
+            case EntityType.Obstacle
+                when entity is ObstacleEntity obstacleEntity
+                    && obstacleEntity.ObstacleType != ObstacleType.None:
+                obstaclePrefabs.TryGetValue(obstacleEntity.ObstacleType, out var obstaclePrefab);
+                return obstaclePrefab;
+            default:
+                return null;
+        }
+    }
+
+    public void PlaceBuilding(BuildingPrefab prefab, int x, int y)
+    {
+        Debug.Log("Placing building at " + x + ", " + y);
+        PlaceEntity(x, y, new BuildingEntity(prefab.BuildingType, prefab.CraftingSpeed));
     }
 
     /// <summary>
@@ -139,13 +177,13 @@ public class GridSystem
     /// <br />
     /// Generates a patch of resources on the grid.
     /// </summary>
-    /// <param name="resourceType"></param>
+    /// <param name="resourcePrefab"></param>
     /// <param name="startX"></param>
     /// <param name="startY"></param>
     /// <param name="patchWidth"></param>
     /// <param name="patchHeight"></param>
     public void GenerateResourcePatch(
-        ResourceType resourceType,
+        ResourcePrefab resourcePrefab,
         int startX,
         int startY,
         int patchWidth,
@@ -162,7 +200,10 @@ public class GridSystem
                     PlaceEntity(
                         x,
                         y,
-                        new ResourceEntity(resourceType, Mathf.FloorToInt(richness * 100))
+                        new ResourceEntity(
+                            resourcePrefab.ResourceType,
+                            Mathf.FloorToInt(richness * 100)
+                        )
                     );
                 }
             }

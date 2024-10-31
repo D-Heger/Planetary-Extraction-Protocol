@@ -19,23 +19,23 @@ public class test : MonoBehaviour
             new Vector3(0, 0),
             new Dictionary<ResourceType, GameObject>
             {
-                { ResourceType.Iron, ironPrefab.prefab },
-                { ResourceType.Copper, copperPrefab.prefab },
+                { ironPrefab.ResourceType, ironPrefab.Prefab },
+                { copperPrefab.ResourceType, copperPrefab.Prefab },
             },
             new Dictionary<BuildingType, GameObject>
             {
-                { BuildingType.Mine, minePrefab.prefab },
+                { minePrefab.BuildingType, minePrefab.Prefab },
             },
             new Dictionary<ObstacleType, GameObject>
             {
-                { ObstacleType.Wreckage, wreckagePrefab.prefab },
+                { wreckagePrefab.ObstacleType, wreckagePrefab.Prefab },
             }
         );
 
-        gridSystem.GenerateResourcePatch(ResourceType.Iron, 5, 5, 4, 4, 0.35f);
-        gridSystem.GenerateResourcePatch(ResourceType.Copper, 10, 10, 3, 3, 0.45f);
+        gridSystem.GenerateResourcePatch(ironPrefab, 5, 5, 4, 4, 0.35f);
+        gridSystem.GenerateResourcePatch(copperPrefab, 10, 10, 3, 3, 0.45f);
 
-        gridSystem.PlaceEntity(5, 5, new BuildingEntity(BuildingType.Mine));
+        gridSystem.PlaceBuilding(minePrefab, 5, 5);
 
         gridSystem.PlaceEntity(10, 10, new ObstacleEntity(ObstacleType.Wreckage));
     }

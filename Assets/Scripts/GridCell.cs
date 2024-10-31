@@ -1,28 +1,42 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridCell
 {
     public int X { get; set; }
     public int Y { get; set; }
-    public GridEntity Entity { get; set; }
+    public List<GridEntity> Entities { get; private set; }
     public GameObject VisualRepresentation { get; set; }
 
     public GridCell(int x, int y)
     {
         X = x;
         Y = y;
-        Entity = null;
+        Entities = new List<GridEntity>();
     }
 
-    public bool IsOccupied => Entity != null && !Entity.CanOccupy();
+    public bool IsOccupied => Entities.Exists(entity => entity.CanOccupy());
 
-    public void SetEntity(GridEntity entity)
+    public GridEntity GetTopEntity() {
+        if (Entities.Count == 0) return null;
+
+        Entities.Sort((a, b) => a.EntityType.CompareTo(b.EntityType));
+        return Entities[0];
+     }
+
+    public void AddEntity(GridEntity entity)
     {
-        Entity = entity;
+        Entities.Add(entity);
     }
 
-    public void RemoveEntity()
+    public void RemoveEntity(GridEntity entity)
     {
-        Entity = null;
+        Entities.Remove(entity);
+    }
+
+    public void ClearEntities()
+    {
+        Entities.Clear();
     }
 }
