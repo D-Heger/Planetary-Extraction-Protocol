@@ -182,6 +182,18 @@ public class GridSystem
         PlaceEntity(x, y, new BuildingEntity(prefab.BuildingType, prefab.CraftingSpeed));
     }
 
+    public void PlaceObstacle(ObstaclePrefab prefab, int x, int y)
+    {
+        Debug.Log("Placing obstacle at " + x + ", " + y);
+        PlaceEntity(x, y, new ObstacleEntity(prefab.ObstacleType));
+    }
+
+    public void PlaceResource(ResourcePrefab prefab, int x, int y, int richness)
+    {
+        Debug.Log("Placing resource at " + x + ", " + y);
+        PlaceEntity(x, y, new ResourceEntity(prefab.ResourceType, richness));
+    }
+
     /// <summary>
     /// Example Method.
     /// <br />
@@ -207,14 +219,7 @@ public class GridSystem
             {
                 if (!gridCells[x, y].IsOccupied)
                 {
-                    PlaceEntity(
-                        x,
-                        y,
-                        new ResourceEntity(
-                            resourcePrefab.ResourceType,
-                            Mathf.FloorToInt(richness * 100)
-                        )
-                    );
+                    PlaceResource(resourcePrefab, x, y, (int)(richness * 100));
                 }
             }
         }

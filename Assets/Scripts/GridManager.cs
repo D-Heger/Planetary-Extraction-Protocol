@@ -39,7 +39,7 @@ public class GridManager : MonoBehaviour
 
         gridSystem.PlaceBuilding(minePrefab, 5, 5);
 
-        gridSystem.PlaceEntity(10, 10, new ObstacleEntity(ObstacleType.Wreckage));
+        gridSystem.PlaceObstacle(wreckagePrefab, 10, 10);
     }
 
     void Update()
