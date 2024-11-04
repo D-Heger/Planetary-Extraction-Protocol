@@ -6,45 +6,55 @@ public class GridCell
 {
     public int X { get; set; }
     public int Y { get; set; }
-    public List<GridEntity> Entities { get; private set; }
+    private BuildingEntity BuildingEntity;
     public GameObject VisualRepresentation { get; set; }
+    private GridEntity EnvEntity;
+    public bool IsOccupied => BuildingEntity != null || EnvEntity is ObstacleEntity;
+
+    public GridEntity GetEnvEntity() {
+        return EnvEntity;
+    }
+
+    public BuildingEntity GetBuildingEntity() {
+        return BuildingEntity;
+    }
+
+    public void SetEntity(GridEntity entity) {
+
+        if(entity is BuildingEntity entity1) {
+            BuildingEntity = entity1;
+            return;
+        }
+
+        EnvEntity = entity;
+    }
+
+    public void DeleteEntity(GridEntity gridEntity) {
+
+        if (gridEntity is BuildingEntity) {
+            BuildingEntity = null;
+        }
+        
+        EnvEntity = null;
+    }
 
     public GridCell(int x, int y)
     {
         X = x;
         Y = y;
-        Entities = new List<GridEntity>();
     }
 
-    public bool IsOccupied => Entities.Exists(entity => entity.CanOccupy());
 
     public GridEntity GetTopEntity()
     {
-        if (Entities.Count == 0)
-            return null;
+        if (BuildingEntity != null) {
+            return BuildingEntity;
+        } 
 
-        Entities.Sort((a, b) => a.Priority.CompareTo(b.Priority));
-
-        return Entities[0];
-    }
-
-    public List<GridEntity> GetEntities()
-    {
-        return Entities;
-    }
-
-    public void AddEntity(GridEntity entity)
-    {
-        Entities.Add(entity);
-    }
-
-    public void RemoveEntity(GridEntity entity)
-    {
-        Entities.Remove(entity);
-    }
-
-    public void ClearEntities()
-    {
-        Entities.Clear();
+        if (EnvEntity != null) {
+            return EnvEntity;
+        }
+        
+        return null;
     }
 }

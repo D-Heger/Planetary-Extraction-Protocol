@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
@@ -80,11 +81,10 @@ public class GridSystem
 
     public bool PlaceEntity(int x, int y, GridEntity entity)
     {
-        Debug.Log(IsValidGridPosition(x, y));
         if (IsValidGridPosition(x, y) && !gridCells[x, y].IsOccupied)
         {
-            gridCells[x, y].AddEntity(entity);
-            CreateVisualRepresentation(x, y, entity);
+            gridCells[x, y].SetEntity(entity);
+            CreateVisualRepresentation(x, y);
             return true;
         }
         return false;
@@ -106,19 +106,7 @@ public class GridSystem
             {
                 GameObject.Destroy(gridCells[x, y].VisualRepresentation);
             }
-            gridCells[x, y].RemoveEntity(entity);
-        }
-    }
-
-    public void ClearEntities(int x, int y)
-    {
-        if (IsValidGridPosition(x, y))
-        {
-            if (gridCells[x, y].VisualRepresentation != null)
-            {
-                GameObject.Destroy(gridCells[x, y].VisualRepresentation);
-            }
-            gridCells[x, y].ClearEntities();
+            gridCells[x, y].DeleteEntity(entity);
         }
     }
 
@@ -132,15 +120,20 @@ public class GridSystem
         return x >= 0 && y >= 0 && x < width && y < height;
     }
 
-    private void CreateVisualRepresentation(int x, int y, GridEntity entity)
+    private void CreateVisualRepresentation(int x, int y)
     {
         GridEntity topEntity = gridCells[x, y].GetTopEntity();
         GameObject prefab = GetPrefabForEntity(topEntity);
+        GameObject gridRepresentation = gridCells[x, y].VisualRepresentation;
 
         if (prefab != null)
         {
             Vector3 position = GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f;
             GameObject visual = GameObject.Instantiate(prefab, position, Quaternion.identity);
+
+            if (gridRepresentation != null) {
+                GameObject.Destroy(gridRepresentation);
+            }
 
             // Set the visual to be the correct size
             visual.transform.localScale = new Vector3(cellSize, cellSize, 1f);
@@ -161,16 +154,19 @@ public class GridSystem
                     && resourceEntity.ResourceType != ResourceType.None:
                 resourcePrefabs.TryGetValue(resourceEntity.ResourceType, out var resourcePrefab);
                 return resourcePrefab;
+
             case EntityType.Building
                 when entity is BuildingEntity buildingEntity
                     && buildingEntity.BuildingType != BuildingType.None:
                 buildingPrefabs.TryGetValue(buildingEntity.BuildingType, out var buildingPrefab);
                 return buildingPrefab;
+
             case EntityType.Obstacle
                 when entity is ObstacleEntity obstacleEntity
                     && obstacleEntity.ObstacleType != ObstacleType.None:
                 obstaclePrefabs.TryGetValue(obstacleEntity.ObstacleType, out var obstaclePrefab);
                 return obstaclePrefab;
+
             default:
                 return null;
         }
