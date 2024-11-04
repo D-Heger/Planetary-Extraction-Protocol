@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d15d7e7d6d6346e4c821f83833a3f9e4, type: 3}
   m_Name: MinePrefab
   m_EditorClassIdentifier: 
-  BuildingType: 0
-  Prefab: {fileID: 0}
+  BuildingType: 1
+  Prefab: {fileID: 157637592596167109, guid: 07a71ed1b28f6e242a610479ed5bf38f, type: 3}
   CraftingSpeed: 1
