@@ -18,12 +18,20 @@ public class GridCell
 
     public bool IsOccupied => Entities.Exists(entity => entity.CanOccupy());
 
-    public GridEntity GetTopEntity() {
-        if (Entities.Count == 0) return null;
+    public GridEntity GetTopEntity()
+    {
+        if (Entities.Count == 0)
+            return null;
 
-        Entities.Sort((a, b) => a.EntityType.CompareTo(b.EntityType));
+        Entities.Sort((a, b) => a.Priority.CompareTo(b.Priority));
+
         return Entities[0];
-     }
+    }
+
+    public List<GridEntity> GetEntities()
+    {
+        return Entities;
+    }
 
     public void AddEntity(GridEntity entity)
     {

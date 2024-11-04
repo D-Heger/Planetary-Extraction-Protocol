@@ -6,6 +6,7 @@ public class BuildingEntity : GridEntity
 
     public BuildingEntity(BuildingType buildingType, float craftingSpeed)
     {
+        Priority = 0;
         EntityType = EntityType.Building;
         BuildingType = buildingType;
         CraftingSpeed = craftingSpeed;

@@ -5,6 +5,7 @@ public class ResourceEntity : GridEntity
 
     public ResourceEntity(ResourceType resourceType, int amount)
     {
+        Priority = 2;
         EntityType = EntityType.Resource;
         ResourceType = resourceType;
         Amount = amount;

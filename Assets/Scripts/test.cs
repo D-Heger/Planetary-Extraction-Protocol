@@ -10,6 +10,8 @@ public class test : MonoBehaviour
     public BuildingPrefab minePrefab;
     public ObstaclePrefab wreckagePrefab;
 
+    public bool debugMode = false;
+
     void Start()
     {
         gridSystem = new GridSystem(
@@ -42,6 +44,25 @@ public class test : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) { }
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (debugMode)
+            {
+                LogGridEntities();
+            }
+        }
+    }
+
+    public void LogGridEntities()
+    {
+        Vector3 position = Utils.GetMouseWorldPosition();
+        GridCell cell = gridSystem.GetCell((int)position.x, (int)position.y);
+        List<GridEntity> entitiesOnCell = cell.GetEntities();
+        for (int i = 0; i < entitiesOnCell.Count; i++)
+        {
+            Debug.Log(entitiesOnCell[i].EntityType);
+        }
+        Debug.Log("---");
+        Debug.Log(cell.GetTopEntity().EntityType);
     }
 }

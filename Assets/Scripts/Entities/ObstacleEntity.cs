@@ -4,6 +4,7 @@ public class ObstacleEntity : GridEntity
 
     public ObstacleEntity(ObstacleType obstacleType)
     {
+        Priority = 1;
         EntityType = EntityType.Obstacle;
         ObstacleType = obstacleType;
     }
