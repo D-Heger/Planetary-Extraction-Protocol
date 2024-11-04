@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class test : MonoBehaviour
+public class GridManager : MonoBehaviour
 {
     private GridSystem gridSystem;
 
@@ -64,5 +64,10 @@ public class test : MonoBehaviour
         }
         Debug.Log("---");
         Debug.Log(cell.GetTopEntity().EntityType);
+    }
+
+    public GridSystem GetGridSystem()
+    {
+        return gridSystem;
     }
 }

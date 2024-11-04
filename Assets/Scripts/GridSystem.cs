@@ -57,6 +57,16 @@ public class GridSystem
         }
     }
 
+    public int Width()
+    {
+        return width;
+    }
+
+    public int Height()
+    {
+        return height;
+    }
+
     public Vector3 GetWorldPosition(int x, int y)
     {
         return new Vector3(x, y) * cellSize + originPosition;
