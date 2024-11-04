@@ -25,6 +25,8 @@ public class BuildSystem
         Vector3 position = new Vector3(x, y) * CellSize + OriginPosition + new Vector3(CellSize, CellSize) * 0.5f;
 
         buildingPreview = GameObject.Instantiate(buildingPrefab, position, Quaternion.identity);
+
+        buildingPreview.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
     }
 
     public void GetGridSnappedMousePosition(out Vector3 outPosition)
