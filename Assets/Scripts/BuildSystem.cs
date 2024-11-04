@@ -34,5 +34,6 @@ public class BuildSystem
         mousePosition.y = Mathf.Floor(mousePosition.y);
 
         outPosition = mousePosition * CellSize + OriginPosition + new Vector3(CellSize, CellSize) * 0.5f;
+        outPosition.z = -1; //TODO rework dirty fix
     }
 }
