@@ -7,16 +7,19 @@ public class BuildSystem
     private float CellSize;
     private Vector3 OriginPosition;
     private Dictionary<BuildingType, GameObject> BuildingPrefabs;
+    private GridSystem GridSystem;
 
     public BuildSystem(
         float cellSize,
         Vector3 originPosition,
-        Dictionary<BuildingType, GameObject> buildingPrefabs
+        Dictionary<BuildingType, GameObject> buildingPrefabs,
+        GridSystem gridSystem
     )
     {
         CellSize = cellSize;
         OriginPosition = originPosition;
         BuildingPrefabs = buildingPrefabs;
+        GridSystem = gridSystem;
     }
 
     public void CreateBuildPreview(float x, float y, BuildingEntity buildingEntity, out GameObject buildingPreview) {
@@ -37,5 +40,10 @@ public class BuildSystem
 
         outPosition = mousePosition * CellSize + OriginPosition + new Vector3(CellSize, CellSize) * 0.5f;
         outPosition.z = -1; //TODO rework dirty fix
+    }
+
+    public void PlaceBuilding(Vector3 position, BuildingPrefab buildingPrefab)
+    {
+        GridSystem.PlaceBuilding(buildingPrefab, (int)position.x, (int)position.y);
     }
 }

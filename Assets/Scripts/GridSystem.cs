@@ -1,9 +1,4 @@
-using System;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class GridSystem
@@ -131,7 +126,8 @@ public class GridSystem
             Vector3 position = GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f;
             GameObject visual = GameObject.Instantiate(prefab, position, Quaternion.identity);
 
-            if (gridRepresentation != null) {
+            if (gridRepresentation != null)
+            {
                 GameObject.Destroy(gridRepresentation);
             }
 

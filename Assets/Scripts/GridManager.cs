@@ -8,6 +8,8 @@ public class GridManager : MonoBehaviour
     public ResourcePrefab ironPrefab;
     public ResourcePrefab copperPrefab;
     public BuildingPrefab minePrefab;
+    public BuildingPrefab beltPrefab;
+    public BuildingPrefab smelterPrefab;
     public ObstaclePrefab wreckagePrefab;
 
     public bool debugMode = false;
@@ -27,6 +29,8 @@ public class GridManager : MonoBehaviour
             new Dictionary<BuildingType, GameObject>
             {
                 { minePrefab.BuildingType, minePrefab.Prefab },
+                { beltPrefab.BuildingType, beltPrefab.Prefab },
+                { smelterPrefab.BuildingType, smelterPrefab.Prefab },
             },
             new Dictionary<ObstacleType, GameObject>
             {
