@@ -1,49 +1,40 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
     private GridSystem gridSystem;
 
-    public ResourcePrefab ironPrefab;
-    public ResourcePrefab copperPrefab;
-    public BuildingPrefab minePrefab;
-    public BuildingPrefab beltPrefab;
-    public BuildingPrefab smelterPrefab;
-    public ObstaclePrefab wreckagePrefab;
-
     public bool debugMode = false;
 
     void Start()
     {
-        gridSystem = new GridSystem(
-            100,
-            100,
-            1f,
-            new Vector3(0, 0),
-            new Dictionary<ResourceType, GameObject>
-            {
-                { ironPrefab.ResourceType, ironPrefab.Prefab },
-                { copperPrefab.ResourceType, copperPrefab.Prefab },
-            },
-            new Dictionary<BuildingType, GameObject>
-            {
-                { minePrefab.BuildingType, minePrefab.Prefab },
-                { beltPrefab.BuildingType, beltPrefab.Prefab },
-                { smelterPrefab.BuildingType, smelterPrefab.Prefab },
-            },
-            new Dictionary<ObstacleType, GameObject>
-            {
-                { wreckagePrefab.ObstacleType, wreckagePrefab.Prefab },
-            }
+        var prefabLoader = PrefabLoader.Instance;
+
+        gridSystem = new GridSystem(100, 100, 1f, new Vector3(0, 0));
+
+        gridSystem.GenerateResourcePatch(
+            prefabLoader.GetResourcePrefab(ResourceType.Iron),
+            5,
+            5,
+            4,
+            4,
+            0.35f
+        );
+        gridSystem.GenerateResourcePatch(
+            prefabLoader.GetResourcePrefab(ResourceType.Copper),
+            10,
+            10,
+            3,
+            3,
+            0.45f
         );
 
-        gridSystem.GenerateResourcePatch(ironPrefab, 5, 5, 4, 4, 0.35f);
-        gridSystem.GenerateResourcePatch(copperPrefab, 10, 10, 3, 3, 0.45f);
+        gridSystem.PlaceBuilding(prefabLoader.GetBuildingPrefab(BuildingType.Mine), 5, 5);
+        gridSystem.PlaceBuilding(prefabLoader.GetBuildingPrefab(BuildingType.Belt), 4, 5);
+        gridSystem.PlaceBuilding(prefabLoader.GetBuildingPrefab(BuildingType.Belt), 3, 5);
+        gridSystem.PlaceBuilding(prefabLoader.GetBuildingPrefab(BuildingType.Smelter), 2, 5);
 
-        gridSystem.PlaceBuilding(minePrefab, 5, 5);
-
-        gridSystem.PlaceObstacle(wreckagePrefab, 10, 10);
+        gridSystem.PlaceObstacle(prefabLoader.GetObstaclePrefab(ObstacleType.Wreckage), 10, 10);
     }
 
     void Update()

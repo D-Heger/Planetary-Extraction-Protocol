@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -5937530334973756263}
   - component: {fileID: -1315227951284395159}
   m_Layer: 0
-  m_Name: Wreckage
+  m_Name: WreckagePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

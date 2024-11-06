@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d15d7e7d6d6346e4c821f83833a3f9e4, type: 3}
-  m_Name: SmelterPrefab
+  m_Script: {fileID: 11500000, guid: d54fe7de2532bb34a9ee939e1e34ad80, type: 3}
+  m_Name: Iron
   m_EditorClassIdentifier: 
-  BuildingType: 3
-  Prefab: {fileID: 6334975454598924017, guid: 8de2e92280a6b504aa5c49d0305c9a72, type: 3}
-  CraftingSpeed: 1
+  ResourceType: 0
+  Prefab: {fileID: 7427481571357534658, guid: d2db14911496bc44799a17c8233bd58c, type: 3}

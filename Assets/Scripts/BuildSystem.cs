@@ -1,33 +1,27 @@
-using System.Collections.Generic;
-using System;
 using UnityEngine;
 
 public class BuildSystem
 {
     private float CellSize;
     private Vector3 OriginPosition;
-    private Dictionary<BuildingType, GameObject> BuildingPrefabs;
     private GridSystem GridSystem;
 
     public BuildSystem(
         float cellSize,
         Vector3 originPosition,
-        Dictionary<BuildingType, GameObject> buildingPrefabs,
         GridSystem gridSystem
     )
     {
         CellSize = cellSize;
         OriginPosition = originPosition;
-        BuildingPrefabs = buildingPrefabs;
         GridSystem = gridSystem;
     }
 
-    public void CreateBuildPreview(float x, float y, BuildingEntity buildingEntity, out GameObject buildingPreview) {
-
-        BuildingPrefabs.TryGetValue(buildingEntity.BuildingType, out var buildingPrefab);
+    public void CreateBuildPreview(float x, float y, BuildingPrefab buildingPrefab, out GameObject buildingPreview)
+    {
         Vector3 position = new Vector3(x, y) * CellSize + OriginPosition + new Vector3(CellSize, CellSize) * 0.5f;
 
-        buildingPreview = GameObject.Instantiate(buildingPrefab, position, Quaternion.identity);
+        buildingPreview = GameObject.Instantiate(buildingPrefab.Prefab, position, Quaternion.identity);
 
         buildingPreview.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
     }

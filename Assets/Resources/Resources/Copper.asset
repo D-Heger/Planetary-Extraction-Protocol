@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d50199c359fb3ab4bb2a39821562f7d6, type: 3}
-  m_Name: WreckagePrefab
+  m_Script: {fileID: 11500000, guid: d54fe7de2532bb34a9ee939e1e34ad80, type: 3}
+  m_Name: Copper
   m_EditorClassIdentifier: 
-  ObstacleType: 2
-  Prefab: {fileID: 8875142271302810141, guid: 314e106ebfea6b24d83616e47bd02756, type: 3}
+  ResourceType: 1
+  Prefab: {fileID: 5861785640887190559, guid: dea3ddf1a4f70f74a8d880fb9fc7c511, type: 3}

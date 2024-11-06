@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d54fe7de2532bb34a9ee939e1e34ad80, type: 3}
-  m_Name: CopperPrefab
+  m_Script: {fileID: 11500000, guid: d15d7e7d6d6346e4c821f83833a3f9e4, type: 3}
+  m_Name: Belt
   m_EditorClassIdentifier: 
-  ResourceType: 2
-  Prefab: {fileID: 5861785640887190559, guid: dea3ddf1a4f70f74a8d880fb9fc7c511, type: 3}
+  BuildingType: 1
+  Prefab: {fileID: 6283742516153849737, guid: b3579484c6e0e6246876b8e3001ff9d9, type: 3}
+  CraftingSpeed: 1

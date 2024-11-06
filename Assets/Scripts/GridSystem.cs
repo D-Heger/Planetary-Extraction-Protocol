@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GridSystem
@@ -8,27 +7,13 @@ public class GridSystem
     private float cellSize;
     private Vector3 originPosition;
     private GridCell[,] gridCells;
-    private Dictionary<ResourceType, GameObject> resourcePrefabs;
-    private Dictionary<BuildingType, GameObject> buildingPrefabs;
-    private Dictionary<ObstacleType, GameObject> obstaclePrefabs;
 
-    public GridSystem(
-        int width,
-        int height,
-        float cellSize,
-        Vector3 originPosition,
-        Dictionary<ResourceType, GameObject> resourcePrefabs,
-        Dictionary<BuildingType, GameObject> buildingPrefabs,
-        Dictionary<ObstacleType, GameObject> obstaclePrefabs
-    )
+    public GridSystem(int width, int height, float cellSize, Vector3 originPosition)
     {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
         this.originPosition = originPosition;
-        this.resourcePrefabs = resourcePrefabs;
-        this.buildingPrefabs = buildingPrefabs;
-        this.obstaclePrefabs = obstaclePrefabs;
         gridCells = new GridCell[width, height];
 
         // Initialize grid cells
@@ -53,16 +38,6 @@ public class GridSystem
         }
     }
 
-    public int Width()
-    {
-        return width;
-    }
-
-    public int Height()
-    {
-        return height;
-    }
-
     public Vector3 GetWorldPosition(int x, int y)
     {
         return new Vector3(x, y) * cellSize + originPosition;
@@ -74,23 +49,23 @@ public class GridSystem
         y = Mathf.FloorToInt((worldPosition - originPosition).y / cellSize);
     }
 
-    public bool PlaceEntity(int x, int y, GridEntity entity)
+    public bool PlaceEntity(int x, int y, GridEntity entity, GameObject prefab)
     {
         if (IsValidGridPosition(x, y) && !gridCells[x, y].IsOccupied)
         {
             gridCells[x, y].SetEntity(entity);
-            CreateVisualRepresentation(x, y);
+            CreateVisualRepresentation(x, y, prefab);
             return true;
         }
         return false;
     }
 
-    public bool PlaceEntity(Vector3 worldPosition, GridEntity entity)
+    public bool PlaceEntity(Vector3 worldPosition, GridEntity entity, GameObject prefab)
     {
         int x,
             y;
         GetXY(worldPosition, out x, out y);
-        return PlaceEntity(x, y, entity);
+        return PlaceEntity(x, y, entity, prefab);
     }
 
     public void RemoveEntity(int x, int y, GridEntity entity)
@@ -115,84 +90,52 @@ public class GridSystem
         return x >= 0 && y >= 0 && x < width && y < height;
     }
 
-    private void CreateVisualRepresentation(int x, int y)
+    private void CreateVisualRepresentation(int x, int y, GameObject prefab)
     {
-        GridEntity topEntity = gridCells[x, y].GetTopEntity();
-        GameObject prefab = GetPrefabForEntity(topEntity);
+        if (prefab == null)
+        {
+            return;
+        }
+
         GameObject gridRepresentation = gridCells[x, y].VisualRepresentation;
 
-        if (prefab != null)
+        Vector3 position = GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f;
+        GameObject visual = GameObject.Instantiate(prefab, position, Quaternion.identity);
+
+        if (gridRepresentation != null)
         {
-            Vector3 position = GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f;
-            GameObject visual = GameObject.Instantiate(prefab, position, Quaternion.identity);
-
-            if (gridRepresentation != null)
-            {
-                GameObject.Destroy(gridRepresentation);
-            }
-
-            // Set the visual to be the correct size
-            visual.transform.localScale = new Vector3(cellSize, cellSize, 1f);
-
-            // Adjust the pivot point for better alignment (assuming the pivot is centered)
-            visual.transform.position = position;
-
-            gridCells[x, y].VisualRepresentation = visual;
+            GameObject.Destroy(gridRepresentation);
         }
-    }
 
-    private GameObject GetPrefabForEntity(GridEntity entity)
-    {
-        switch (entity.EntityType)
-        {
-            case EntityType.Resource
-                when entity is ResourceEntity resourceEntity:
-                resourcePrefabs.TryGetValue(resourceEntity.ResourceType, out var resourcePrefab);
-                return resourcePrefab;
+        visual.transform.localScale = new Vector3(cellSize, cellSize, 1f);
+        visual.transform.position = position;
 
-            case EntityType.Building
-                when entity is BuildingEntity buildingEntity:
-                buildingPrefabs.TryGetValue(buildingEntity.BuildingType, out var buildingPrefab);
-                return buildingPrefab;
-
-            case EntityType.Obstacle
-                when entity is ObstacleEntity obstacleEntity:
-                obstaclePrefabs.TryGetValue(obstacleEntity.ObstacleType, out var obstaclePrefab);
-                return obstaclePrefab;
-
-            default:
-                return null;
-        }
+        gridCells[x, y].VisualRepresentation = visual;
     }
 
     public void PlaceBuilding(BuildingPrefab prefab, int x, int y)
     {
         Debug.Log("Placing building at " + x + ", " + y);
-        PlaceEntity(x, y, new BuildingEntity(prefab.BuildingType, prefab.CraftingSpeed));
+        PlaceEntity(
+            x,
+            y,
+            new BuildingEntity(prefab.BuildingType, prefab.CraftingSpeed),
+            prefab.Prefab
+        );
     }
 
     public void PlaceObstacle(ObstaclePrefab prefab, int x, int y)
     {
         Debug.Log("Placing obstacle at " + x + ", " + y);
-        PlaceEntity(x, y, new ObstacleEntity(prefab.ObstacleType));
+        PlaceEntity(x, y, new ObstacleEntity(prefab.ObstacleType), prefab.Prefab);
     }
 
     public void PlaceResource(ResourcePrefab prefab, int x, int y, int richness)
     {
         Debug.Log("Placing resource at " + x + ", " + y);
-        PlaceEntity(x, y, new ResourceEntity(prefab.ResourceType, richness));
+        PlaceEntity(x, y, new ResourceEntity(prefab.ResourceType, richness), prefab.Prefab);
     }
 
-    /// <summary>
-    /// Example Method.
-    /// <br />
-    /// Generates a patch of resources on the grid.
-    /// </summary>
-    /// <param name="resourcePrefab"></param>
-    /// <param name="startX"></param>
-    /// <param name="startY"></param>
-    /// <param name="patchWidth"></param>
-    /// <param name="patchHeight"></param>
     public void GenerateResourcePatch(
         ResourcePrefab resourcePrefab,
         int startX,

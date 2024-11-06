@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BuildManager : MonoBehaviour
@@ -8,10 +5,6 @@ public class BuildManager : MonoBehaviour
     private GridManager GridManager;
     private BuildSystem BuildSystem;
     private GameObject BuildPreview;
-    public BuildingPrefab minePrefab;
-    public BuildingPrefab beltPrefab;
-    public BuildingPrefab smelterPrefab;
-
     public BuildingPrefab selectedBuildingPrefab;
 
     void Start()
@@ -21,12 +14,6 @@ public class BuildManager : MonoBehaviour
         BuildSystem = new BuildSystem(
             1f,
             new Vector3(0, 0),
-            new Dictionary<BuildingType, GameObject>
-            {
-                { minePrefab.BuildingType, minePrefab.Prefab },
-                { beltPrefab.BuildingType, beltPrefab.Prefab },
-                { smelterPrefab.BuildingType, smelterPrefab.Prefab },
-            },
             GridManager.GetGridSystem()
         );
     }
@@ -72,10 +59,7 @@ public class BuildManager : MonoBehaviour
         BuildSystem.CreateBuildPreview(
             mousePosition.x,
             mousePosition.y,
-            new BuildingEntity(
-                selectedBuildingPrefab.BuildingType,
-                selectedBuildingPrefab.CraftingSpeed
-            ),
+            selectedBuildingPrefab,
             out BuildPreview
         );
     }
