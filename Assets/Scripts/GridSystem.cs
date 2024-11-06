@@ -146,20 +146,17 @@ public class GridSystem
         switch (entity.EntityType)
         {
             case EntityType.Resource
-                when entity is ResourceEntity resourceEntity
-                    && resourceEntity.ResourceType != ResourceType.None:
+                when entity is ResourceEntity resourceEntity:
                 resourcePrefabs.TryGetValue(resourceEntity.ResourceType, out var resourcePrefab);
                 return resourcePrefab;
 
             case EntityType.Building
-                when entity is BuildingEntity buildingEntity
-                    && buildingEntity.BuildingType != BuildingType.None:
+                when entity is BuildingEntity buildingEntity:
                 buildingPrefabs.TryGetValue(buildingEntity.BuildingType, out var buildingPrefab);
                 return buildingPrefab;
 
             case EntityType.Obstacle
-                when entity is ObstacleEntity obstacleEntity
-                    && obstacleEntity.ObstacleType != ObstacleType.None:
+                when entity is ObstacleEntity obstacleEntity:
                 obstaclePrefabs.TryGetValue(obstacleEntity.ObstacleType, out var obstaclePrefab);
                 return obstaclePrefab;
 
