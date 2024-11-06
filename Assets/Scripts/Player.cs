@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float moveSpeed = 5.0f;
+    public float MoveSpeed = 5.0f;
+    public Rigidbody2D Rigidbody2D;
 
     void Update()
     {
@@ -11,9 +12,9 @@ public class Player : MonoBehaviour
 
     void HandleMovement()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-        Vector2 movement = new Vector2(horizontal, vertical) * moveSpeed * Time.deltaTime;
-        transform.Translate(movement);
+        float horizontal = Input.GetAxis("Horizontal") * MoveSpeed;
+        float vertical = Input.GetAxis("Vertical") * MoveSpeed;
+        
+        Rigidbody2D.velocity = new Vector2(horizontal, vertical);
     }
 }
