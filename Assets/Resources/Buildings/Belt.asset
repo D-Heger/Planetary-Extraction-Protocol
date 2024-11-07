@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d15d7e7d6d6346e4c821f83833a3f9e4, type: 3}
   m_Name: Belt
   m_EditorClassIdentifier: 
-  BuildingType: 1
-  Prefab: {fileID: 6283742516153849737, guid: b3579484c6e0e6246876b8e3001ff9d9, type: 3}
+  BuildingType: 0
+  Prefab: {fileID: 0}
   CraftingSpeed: 1

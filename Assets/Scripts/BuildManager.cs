@@ -5,8 +5,20 @@ public class BuildManager : MonoBehaviour
     private GridManager GridManager;
     private BuildSystem BuildSystem;
     private GameObject BuildPreview;
-    public BuildingPrefab selectedBuildingPrefab;
+    public BuildingScriptableObject selectedBuildingScriptableObject;
+    public static BuildManager Instance;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
         GridManager = GameObject.FindObjectOfType<GridManager>();
@@ -20,7 +32,7 @@ public class BuildManager : MonoBehaviour
 
     void Update()
     {
-        if (selectedBuildingPrefab == null)
+        if (selectedBuildingScriptableObject == null)
         {
             return;
         }
@@ -37,7 +49,7 @@ public class BuildManager : MonoBehaviour
         {
             if (!Utils.IsMouseOverUI())
             {
-                BuildSystem.PlaceBuilding(outPosition, selectedBuildingPrefab);
+                BuildSystem.PlaceBuilding(outPosition, selectedBuildingScriptableObject);
                 if (!Input.GetKey(KeyCode.LeftShift))
                 {
                     ClearBuildPreview();
@@ -46,9 +58,9 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    public void SetSelectedBuilding(BuildingPrefab buildingPrefab)
+    public void SetSelectedBuilding(BuildingScriptableObject buildingScriptableObject)
     {
-        selectedBuildingPrefab = buildingPrefab;
+        selectedBuildingScriptableObject = buildingScriptableObject;
 
         CreateBuildPreview();
     }
@@ -59,7 +71,7 @@ public class BuildManager : MonoBehaviour
         BuildSystem.CreateBuildPreview(
             mousePosition.x,
             mousePosition.y,
-            selectedBuildingPrefab,
+            selectedBuildingScriptableObject,
             out BuildPreview
         );
     }
@@ -67,6 +79,6 @@ public class BuildManager : MonoBehaviour
     public void ClearBuildPreview()
     {
         GameObject.Destroy(BuildPreview);
-        selectedBuildingPrefab = null;
+        selectedBuildingScriptableObject = null;
     }
 }

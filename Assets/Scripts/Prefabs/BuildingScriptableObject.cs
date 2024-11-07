@@ -1,9 +1,9 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BuildingPrefab", menuName = "Prefabs/BuildingPrefab")]
-public class BuildingPrefab : ScriptableObject
+public class BuildingScriptableObject : ScriptableObject
 {
     public BuildingType BuildingType;
     public GameObject Prefab;
-    public float CraftingSpeed = 1;
+    public float Speed;
 }

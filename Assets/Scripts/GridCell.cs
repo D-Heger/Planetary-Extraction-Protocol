@@ -19,14 +19,20 @@ public class GridCell
         return BuildingEntity;
     }
 
-    public void SetEntity(GridEntity entity) {
-
+    public void SetEntity<T>(T entity) 
+    {
         if(entity is BuildingEntity entity1) {
+            if(entity1.BuildingScriptableObject.BuildingType == BuildingType.Mine && EnvEntity is not ResourceEntity) {
+                return;
+            }
+
             BuildingEntity = entity1;
             return;
         }
 
-        EnvEntity = entity;
+        if(entity is GridEntity gridEntity) {
+            EnvEntity = gridEntity;
+        }
     }
 
     public void DeleteEntity(GridEntity gridEntity) {

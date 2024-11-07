@@ -1,13 +1,18 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 public class BuildingEntity : GridEntity
 {
-    public BuildingType BuildingType { get; set; }
+    public List<ResourceEntity> InputStorage;
+    public List<ResourceEntity> OutputStorage;
+    public BuildingScriptableObject BuildingScriptableObject;
+    public int X;
+    public int Y;
 
-    public float CraftingSpeed { get; set; }
-
-    public BuildingEntity(BuildingType buildingType, float craftingSpeed)
+    public BuildingEntity(BuildingScriptableObject buildingScriptableObject, int x, int y)
     {
-        EntityType = EntityType.Building;
-        BuildingType = buildingType;
-        CraftingSpeed = craftingSpeed;
+        BuildingScriptableObject = buildingScriptableObject;
+        X = x;
+        Y = y;
     }
 }

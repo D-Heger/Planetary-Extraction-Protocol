@@ -49,15 +49,17 @@ public class GridSystem
         y = Mathf.FloorToInt((worldPosition - originPosition).y / cellSize);
     }
 
-    public bool PlaceEntity(int x, int y, GridEntity entity, GameObject prefab)
+    public bool PlaceEntity<T>(int x, int y, T entity, GameObject prefab)
     {
-        if (IsValidGridPosition(x, y) && !gridCells[x, y].IsOccupied)
+        if (!IsValidGridPosition(x, y) || gridCells[x, y].IsOccupied)
         {
-            gridCells[x, y].SetEntity(entity);
-            CreateVisualRepresentation(x, y, prefab);
-            return true;
+            return false;
         }
-        return false;
+
+        gridCells[x, y].SetEntity(entity);
+        CreateVisualRepresentation(x, y, prefab);
+        return true;
+
     }
 
     public bool PlaceEntity(Vector3 worldPosition, GridEntity entity, GameObject prefab)
@@ -101,6 +103,9 @@ public class GridSystem
 
         Vector3 position = GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f;
         GameObject visual = GameObject.Instantiate(prefab, position, Quaternion.identity);
+        ObjectStorage objectStorage = visual.GetComponent<ObjectStorage>();
+
+        // objectStorage.SetObject<BuildingEntity>();
 
         if (gridRepresentation != null)
         {
@@ -113,31 +118,31 @@ public class GridSystem
         gridCells[x, y].VisualRepresentation = visual;
     }
 
-    public void PlaceBuilding(BuildingPrefab prefab, int x, int y)
+    public void PlaceBuilding(BuildingScriptableObject prefab, int x, int y)
     {
         Debug.Log("Placing building at " + x + ", " + y);
         PlaceEntity(
             x,
             y,
-            new BuildingEntity(prefab.BuildingType, prefab.CraftingSpeed),
+            new BuildingEntity(prefab, x, y),
             prefab.Prefab
         );
     }
 
-    public void PlaceObstacle(ObstaclePrefab prefab, int x, int y)
+    public void PlaceObstacle(ObstacleScriptableObject prefab, int x, int y)
     {
         Debug.Log("Placing obstacle at " + x + ", " + y);
         PlaceEntity(x, y, new ObstacleEntity(prefab.ObstacleType), prefab.Prefab);
     }
 
-    public void PlaceResource(ResourcePrefab prefab, int x, int y, int richness)
+    public void PlaceResource(ResourceScriptableObject prefab, int x, int y, int richness)
     {
         Debug.Log("Placing resource at " + x + ", " + y);
         PlaceEntity(x, y, new ResourceEntity(prefab.ResourceType, richness), prefab.Prefab);
     }
 
     public void GenerateResourcePatch(
-        ResourcePrefab resourcePrefab,
+        ResourceScriptableObject resourcePrefab,
         int startX,
         int startY,
         int patchWidth,

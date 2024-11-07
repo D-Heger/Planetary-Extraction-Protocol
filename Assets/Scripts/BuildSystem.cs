@@ -17,7 +17,7 @@ public class BuildSystem
         GridSystem = gridSystem;
     }
 
-    public void CreateBuildPreview(float x, float y, BuildingPrefab buildingPrefab, out GameObject buildingPreview)
+    public void CreateBuildPreview(float x, float y, BuildingScriptableObject buildingPrefab, out GameObject buildingPreview)
     {
         Vector3 position = new Vector3(x, y) * CellSize + OriginPosition + new Vector3(CellSize, CellSize) * 0.5f;
 
@@ -36,8 +36,8 @@ public class BuildSystem
         outPosition.z = -1; //TODO rework dirty fix
     }
 
-    public void PlaceBuilding(Vector3 position, BuildingPrefab buildingPrefab)
+    public void PlaceBuilding(Vector3 position, BuildingScriptableObject buildingScriptableObject)
     {
-        GridSystem.PlaceBuilding(buildingPrefab, (int)position.x, (int)position.y);
+        GridSystem.PlaceBuilding(buildingScriptableObject, (int)position.x, (int)position.y);
     }
 }
