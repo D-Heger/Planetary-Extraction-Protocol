@@ -22,20 +22,9 @@ public class BuildSystem
         Vector3 position = new Vector3(x, y) * CellSize + OriginPosition + new Vector3(CellSize, CellSize) * 0.5f;
 
         SpriteRenderer spriteRenderer = buildingScriptableObject.Prefab.GetComponent<SpriteRenderer>();
-
-        buildingPreview = GameObject.Instantiate(CreatePreviewGameObject(spriteRenderer), position, Quaternion.identity);
-
-
+        buildingPreview = new GameObject("BuildingPreview");
+        buildingPreview.AddComponent<SpriteRenderer>().sprite = spriteRenderer.sprite;
         buildingPreview.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
-    }
-
-    private GameObject CreatePreviewGameObject(SpriteRenderer spriteRenderer) {
-        GameObject newGameObject = new("SpriteObject");
-
-        SpriteRenderer newSpriteRenderer = newGameObject.AddComponent<SpriteRenderer>();
-        newSpriteRenderer.sprite = spriteRenderer.sprite;
-
-        return newGameObject;
     }
 
     public void GetGridSnappedMousePosition(out Vector3 outPosition)
