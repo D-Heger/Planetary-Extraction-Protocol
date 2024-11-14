@@ -57,7 +57,7 @@ public class GridSystem
         }
 
         gridCells[x, y].SetEntity(entity);
-        CreateVisualRepresentation(x, y, entity, prefab);
+        InstantiateGameObject(x, y, entity, prefab);
         return true;
 
     }
@@ -84,7 +84,7 @@ public class GridSystem
 
     public GridCell GetCell(int x, int y)
     {
-        return IsValidGridPosition(x, y) ? gridCells[x, y] : null;
+        return IsValidGridPosition(x, y) ? gridCells[x, y] : null;;
     }
 
     private bool IsValidGridPosition(int x, int y)
@@ -92,38 +92,38 @@ public class GridSystem
         return x >= 0 && y >= 0 && x < width && y < height;
     }
 
-    private void CreateVisualRepresentation<T>(int x, int y, T entity, GameObject prefab)
+    private void InstantiateGameObject<T>(int x, int y, T entity, GameObject prefab)
     {
         if (prefab == null)
         {
             return;
         }
-
+        
         GameObject gridRepresentation = gridCells[x, y].VisualRepresentation;
 
         Vector3 position = GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f;
-        GameObject visual = GameObject.Instantiate(prefab, position, Quaternion.identity);
+        GameObject gameObject = GameObject.Instantiate(prefab, position, Quaternion.identity);
         
-        if (entity is BuildingEntity) {
-            ObjectStorage objectStorage = visual.GetComponent<ObjectStorage>();
+        if (entity is BuildingEntity buildingEntity) {
+            ObjectStorage objectStorage = gameObject.GetComponent<ObjectStorage>();
 
-            objectStorage.SetObject<T>(entity);
+            objectStorage.SetObject(buildingEntity);
         }
+        
 
         if (gridRepresentation != null)
         {
             GameObject.Destroy(gridRepresentation);
         }
 
-        visual.transform.localScale = new Vector3(cellSize, cellSize, 1f);
-        visual.transform.position = position;
+        gameObject.transform.localScale = new Vector3(cellSize, cellSize, 1f);
+        gameObject.transform.position = position;
 
-        gridCells[x, y].VisualRepresentation = visual;
+        gridCells[x, y].VisualRepresentation = gameObject;
     }
 
     public void PlaceBuilding(BuildingScriptableObject prefab, int x, int y)
     {
-        Debug.Log("Placing building at " + x + ", " + y);
         PlaceEntity(
             x,
             y,
@@ -134,13 +134,11 @@ public class GridSystem
 
     public void PlaceObstacle(ObstacleScriptableObject prefab, int x, int y)
     {
-        Debug.Log("Placing obstacle at " + x + ", " + y);
         PlaceEntity(x, y, new ObstacleEntity(prefab.ObstacleType), prefab.Prefab);
     }
 
     public void PlaceResource(ResourceScriptableObject prefab, int x, int y, int richness)
     {
-        Debug.Log("Placing resource at " + x + ", " + y);
         PlaceEntity(x, y, new ResourceEntity(prefab.ResourceType, richness), prefab.Prefab);
     }
 

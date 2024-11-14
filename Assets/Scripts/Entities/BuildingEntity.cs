@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class BuildingEntity : GridEntity
 {
-    public List<ResourceEntity> InputStorage;
-    public List<ResourceEntity> OutputStorage;
+    public List<ResourceEntity> InputStorage = new();
+    public List<ResourceEntity> OutputStorage = new();
     public BuildingScriptableObject BuildingScriptableObject;
     public int X;
     public int Y;
@@ -12,6 +12,7 @@ public class BuildingEntity : GridEntity
     public BuildingEntity(BuildingScriptableObject buildingScriptableObject, int x, int y)
     {
         BuildingScriptableObject = buildingScriptableObject;
+        EntityType = EntityType.Building;
         X = x;
         Y = y;
     }

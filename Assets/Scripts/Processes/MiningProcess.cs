@@ -17,14 +17,12 @@ public class MiningProcess : MonoBehaviour {
     private void Awake()
     {
         _objectStorage = GetComponent<ObjectStorage>();
-        _buildingEntity = _objectStorage.GetObject<BuildingEntity>();
-        Debug.Log("A: " + GridManager.Instance.GetGridSystem());
-        Debug.Log("B: " + GridManager.Instance.GetGridSystem().GetCell(_buildingEntity.X, _buildingEntity.Y));
-        _resourceEntity = GridManager.Instance.GetGridSystem().GetCell(_buildingEntity.X, _buildingEntity.Y).GetResourceEntity();
     }
 
-    private void Start()
+    public void Start() 
     {
+        _buildingEntity = _objectStorage.GetObject<BuildingEntity>();
+        _resourceEntity = GridManager.Instance.GetGridSystem().GetCell(_buildingEntity.X, _buildingEntity.Y).GetResourceEntity();
         StartCoroutine(Process(_speed));
     }
 

@@ -28,31 +28,39 @@ public class GridCell
         return _buildingEntity;
     }
 
-    public void SetEntity<T>(T entity)
+    public bool SetEntity<T>(T entity)
     {
         if (_obstacleEntity != null)
         {
-            return;
+            return false;
         }
 
-        if (entity is BuildingEntity entity1)
+        if (entity is BuildingEntity buildingEntity)
         {
+            Debug.Log("BuildingType: " + buildingEntity.BuildingScriptableObject.BuildingType);
+            Debug.Log("ResourceEntity: " + _resourceEntity);
             if (
-                entity1.BuildingScriptableObject.BuildingType == BuildingType.Mine
+                buildingEntity.BuildingScriptableObject.BuildingType == BuildingType.Mine
                 && _resourceEntity == null
             )
             {
-                return;
+                return false;
             }
 
-            _buildingEntity = entity1;
-            return;
+            _buildingEntity = buildingEntity;
+            return true;
         }
 
         if (entity is ResourceEntity resourceEntity)
         {
             _resourceEntity = resourceEntity;
         }
+
+        if (entity is ObstacleEntity obstacleEntity) {
+            _obstacleEntity = obstacleEntity;
+        }
+
+        return true;
     }
 
     public void RemoveEntity<T>(T entity)
