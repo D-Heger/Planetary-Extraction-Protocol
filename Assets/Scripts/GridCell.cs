@@ -35,32 +35,25 @@ public class GridCell
             return false;
         }
 
-        if (entity is BuildingEntity buildingEntity)
+        switch (entity)
         {
-            Debug.Log("BuildingType: " + buildingEntity.BuildingScriptableObject.BuildingType);
-            Debug.Log("ResourceEntity: " + _resourceEntity);
-            if (
+            case BuildingEntity buildingEntity:
+                if (
                 buildingEntity.BuildingScriptableObject.BuildingType == BuildingType.Mine
-                && _resourceEntity == null
-            )
-            {
-                return false;
-            }
-
-            _buildingEntity = buildingEntity;
-            return true;
+                && _resourceEntity == null) {
+                    return false;
+                }
+                _buildingEntity = buildingEntity;
+                return true;
+            case ResourceEntity resourceEntity:
+                _resourceEntity = resourceEntity;
+                return true;
+            case ObstacleEntity obstacleEntity:
+                _obstacleEntity = obstacleEntity;
+                return true;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(entity), entity, null);
         }
-
-        if (entity is ResourceEntity resourceEntity)
-        {
-            _resourceEntity = resourceEntity;
-        }
-
-        if (entity is ObstacleEntity obstacleEntity) {
-            _obstacleEntity = obstacleEntity;
-        }
-
-        return true;
     }
 
     public void RemoveEntity<T>(T entity)
