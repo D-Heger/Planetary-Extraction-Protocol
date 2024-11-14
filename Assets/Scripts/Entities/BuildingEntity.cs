@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class BuildingEntity : GridEntity
 {
+    public DirectionType inputDirection = DirectionType.Left;
+    public DirectionType outputDirection = DirectionType.Right;
     public List<ResourceEntity> InputStorage = new();
     public List<ResourceEntity> OutputStorage = new();
     public BuildingScriptableObject BuildingScriptableObject;

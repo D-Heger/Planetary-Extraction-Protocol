@@ -91,4 +91,24 @@ public class Utils : MonoBehaviour
         // If the results list is not empty, it means the mouse is over a UI element
         return results.Count > 0;
     }
+
+    public static DirectionType GetNextDirection(DirectionType direction)
+    {
+        if (direction == DirectionType.Up)
+        {
+            return DirectionType.Right;
+        }
+        else if (direction == DirectionType.Right)
+        {
+            return DirectionType.Down;
+        }
+        else if (direction == DirectionType.Down)
+        {
+            return DirectionType.Left;
+        }
+        else
+        {
+            return DirectionType.Up;
+        }
+    }
 }

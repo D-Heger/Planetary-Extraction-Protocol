@@ -40,9 +40,14 @@ public class BuildManager : MonoBehaviour
         BuildSystem.GetGridSnappedMousePosition(out Vector3 outPosition);
         BuildPreview.transform.position = outPosition;
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Escape))
         {
             ClearBuildPreview();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) 
+        {
+            
         }
 
         if (Input.GetMouseButtonDown(0))

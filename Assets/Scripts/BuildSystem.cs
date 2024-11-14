@@ -41,4 +41,12 @@ public class BuildSystem
     {
         GridSystem.PlaceBuilding(buildingScriptableObject, (int)position.x, (int)position.y);
     }
+
+    public BuildingEntity RotateBuilding(BuildingEntity entity)
+    {
+        entity.inputDirection = Utils.GetNextDirection(entity.inputDirection);
+        entity.outputDirection = Utils.GetNextDirection(entity.outputDirection);
+
+        return entity;
+    }
 }

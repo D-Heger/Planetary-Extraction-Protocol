@@ -12,6 +12,8 @@ public class MiningProcess : MonoBehaviour {
     {
         _resourceEntity.Amount--;
         _buildingEntity.OutputStorage.Add(_resourceEntity);
+        Debug.Log("Amount: " + _resourceEntity.Amount);
+        Debug.Log("Storage: " + _buildingEntity.OutputStorage.Count);
     }
 
     private void Awake()
@@ -28,7 +30,11 @@ public class MiningProcess : MonoBehaviour {
 
     private IEnumerator Process(float seconds)
     {
-        Mine();
-        yield return new WaitForSeconds(seconds);
+        //TODO remove resource entity from grid cell when amount is 0
+        while (_resourceEntity.Amount > 0)
+        {
+            Mine();
+            yield return new WaitForSeconds(seconds);
+        }
     }
 }
