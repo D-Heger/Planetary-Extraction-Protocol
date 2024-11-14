@@ -18,7 +18,9 @@ public class MiningProcess : MonoBehaviour {
     {
         _objectStorage = GetComponent<ObjectStorage>();
         _buildingEntity = _objectStorage.GetObject<BuildingEntity>();
-        _resourceEntity = (ResourceEntity)GridManager.Instance.GetGridSystem().GetCell(_buildingEntity.X, _buildingEntity.Y).GetEnvEntity();
+        Debug.Log("A: " + GridManager.Instance.GetGridSystem());
+        Debug.Log("B: " + GridManager.Instance.GetGridSystem().GetCell(_buildingEntity.X, _buildingEntity.Y));
+        _resourceEntity = GridManager.Instance.GetGridSystem().GetCell(_buildingEntity.X, _buildingEntity.Y).GetResourceEntity();
     }
 
     private void Start()

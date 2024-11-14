@@ -70,7 +70,7 @@ public class GridSystem
         return PlaceEntity(x, y, entity, prefab);
     }
 
-    public void RemoveEntity(int x, int y, GridEntity entity)
+    public void RemoveEntity<T>(int x, int y, T entity)
     {
         if (IsValidGridPosition(x, y))
         {
@@ -78,7 +78,7 @@ public class GridSystem
             {
                 GameObject.Destroy(gridCells[x, y].VisualRepresentation);
             }
-            gridCells[x, y].DeleteEntity(entity);
+            gridCells[x, y].RemoveEntity(entity);
         }
     }
 

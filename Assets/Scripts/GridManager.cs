@@ -64,8 +64,11 @@ public class GridManager : MonoBehaviour
     {
         Vector3 position = Utils.GetMouseWorldPosition();
         GridCell cell = gridSystem.GetCell((int)position.x, (int)position.y);
-        Debug.Log(cell.GetEnvEntity().EntityType);
-        Debug.Log(cell.GetBuildingEntity().EntityType);
+
+        Debug.Log(cell.GetObstacleEntity());
+        Debug.Log(cell.GetResourceEntity());
+        Debug.Log(cell.GetBuildingEntity());
+
         Debug.Log(cell.VisualRepresentation);
     }
 
