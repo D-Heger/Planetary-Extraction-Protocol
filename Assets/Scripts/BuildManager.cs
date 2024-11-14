@@ -5,7 +5,7 @@ public class BuildManager : MonoBehaviour
     private GridManager GridManager;
     private BuildSystem BuildSystem;
     private GameObject BuildPreview;
-    public BuildingScriptableObject selectedBuildingScriptableObject;
+    private BuildingScriptableObject selectedBuildingScriptableObject;
     public static BuildManager Instance;
 
     private void Awake()

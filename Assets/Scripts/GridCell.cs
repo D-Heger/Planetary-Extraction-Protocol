@@ -6,42 +6,43 @@ public class GridCell
 {
     public int X { get; set; }
     public int Y { get; set; }
-    private BuildingEntity BuildingEntity;
     public GameObject VisualRepresentation { get; set; }
-    private GridEntity EnvEntity;
-    public bool IsOccupied => BuildingEntity != null || EnvEntity is ObstacleEntity;
+    public bool IsOccupied => _buildingEntity != null || _obstacleEntity != null;
 
-    public GridEntity GetEnvEntity() {
-        return EnvEntity;
+    private BuildingEntity _buildingEntity;
+    private ResourceEntity _resourceEntity;
+    private ObstacleEntity _obstacleEntity;
+
+    public GridEntity GetResourceEntity() {
+        return _resourceEntity;
+    }
+
+    public GridEntity GetObstacleEntity() {
+        return _obstacleEntity;
     }
 
     public BuildingEntity GetBuildingEntity() {
-        return BuildingEntity;
+        return _buildingEntity;
     }
 
     public void SetEntity<T>(T entity) 
     {
-        if(entity is BuildingEntity entity1) {
-            if(entity1.BuildingScriptableObject.BuildingType == BuildingType.Mine && EnvEntity is not ResourceEntity) {
-                return;
-            }
-
-            BuildingEntity = entity1;
+        if (_obstacleEntity != null) {
             return;
         }
 
-        if(entity is GridEntity gridEntity) {
-            EnvEntity = gridEntity;
-        }
-    }
+        if(entity is BuildingEntity entity1) {
+            if(entity1.BuildingScriptableObject.BuildingType == BuildingType.Mine && _resourceEntity == null) {
+                return;
+            }
 
-    public void DeleteEntity(GridEntity gridEntity) {
-
-        if (gridEntity is BuildingEntity) {
-            BuildingEntity = null;
+            _buildingEntity = entity1;
+            return;
         }
-        
-        EnvEntity = null;
+
+        if(entity is ResourceEntity resourceEntity) {
+            _resourceEntity = resourceEntity;
+        }
     }
 
     public GridCell(int x, int y)

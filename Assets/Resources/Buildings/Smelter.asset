@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d15d7e7d6d6346e4c821f83833a3f9e4, type: 3}
   m_Name: Smelter
   m_EditorClassIdentifier: 
-  BuildingType: 0
-  Prefab: {fileID: 0}
-  CraftingSpeed: 1
+  BuildingType: 2
+  Prefab: {fileID: 6334975454598924017, guid: 8de2e92280a6b504aa5c49d0305c9a72, type: 3}
+  Speed: 1

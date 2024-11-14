@@ -57,7 +57,7 @@ public class GridSystem
         }
 
         gridCells[x, y].SetEntity(entity);
-        CreateVisualRepresentation(x, y, prefab);
+        CreateVisualRepresentation(x, y, entity, prefab);
         return true;
 
     }
@@ -92,7 +92,7 @@ public class GridSystem
         return x >= 0 && y >= 0 && x < width && y < height;
     }
 
-    private void CreateVisualRepresentation(int x, int y, GameObject prefab)
+    private void CreateVisualRepresentation<T>(int x, int y, T entity, GameObject prefab)
     {
         if (prefab == null)
         {
@@ -103,9 +103,12 @@ public class GridSystem
 
         Vector3 position = GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f;
         GameObject visual = GameObject.Instantiate(prefab, position, Quaternion.identity);
-        ObjectStorage objectStorage = visual.GetComponent<ObjectStorage>();
+        
+        if (entity is BuildingEntity) {
+            ObjectStorage objectStorage = visual.GetComponent<ObjectStorage>();
 
-        // objectStorage.SetObject<BuildingEntity>();
+            objectStorage.SetObject<T>(entity);
+        }
 
         if (gridRepresentation != null)
         {
