@@ -53,10 +53,15 @@ public class GridSystem
     {
         if (!IsValidGridPosition(x, y) || gridCells[x, y].IsOccupied)
         {
+            Debug.Log("Invalid grid position or cell is occupied");
             return false;
         }
 
-        gridCells[x, y].SetEntity(entity);
+        if (!gridCells[x, y].SetEntity(entity))
+        {
+            Debug.Log("Failed to set entity");
+            return false;
+        }
         InstantiateGameObject(x, y, entity, prefab);
         return true;
 
